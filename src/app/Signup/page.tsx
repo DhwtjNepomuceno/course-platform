@@ -1,9 +1,21 @@
 "use client";
 import Link from "next/link";
-import { useForm } from "react-hook-form"
+import { useState } from "react";
 
+// Exemplo didático: capturando dados do formulário com useState e onSubmit
 export default function Signup() {
-    const { register } = useForm()
+    // Criando estados para cada campo do formulário
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isAccepted, setIsAccepted] = useState(false);
+
+    // Função chamada ao enviar o formulário
+    function handleSubmit(event: React.SubmitEvent<HTMLFormElement>): void {
+        event.preventDefault(); // Evita o recarregamento da página
+        // Exibe os dados no console (poderia enviar para uma API)
+        console.log({ email, password, isAccepted });
+        // Aqui você pode adicionar validações ou limpar o formulário
+    }
 
     return (
         <div className="grid place-items-center mt-12">
@@ -11,39 +23,53 @@ export default function Signup() {
             <p>Enter your details below & free sign up</p>
 
             <div>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="email">Your  Email</label>
-                        <input 
-                            className="bg-gray-600" 
-                            id="email" 
-                            type="email" 
-                            { ...register("email", { required: true }) }
+                        <label htmlFor="email">Your Email</label>
+                        <input
+                            className="bg-gray-600"
+                            id="email"
+                            type="email"
+                            value={email} // Valor controlado pelo estado
+                            onChange={e => setEmail(e.target.value)} // Atualiza o estado
+                            required
                         />
                     </div>
 
                     <div>
                         <label htmlFor="password">Password</label>
-                        <input 
-                            className="bg-gray-600" 
-                            id="password" 
-                            type="password" 
-                            { ...register("password", { required: true, minLength: 6 }) }
+                        <input
+                            className="bg-gray-600"
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            minLength={6}
+                            required
                         />
                     </div>
 
-                    <button type="submit">Creat account</button>
-
                     <div>
-                        <input type="checkbox" id="is-accepted" />
-                        <label htmlFor="is-accepted">By creating an account you have to agree with our them & condication.</label>
+                        <input
+                            type="checkbox"
+                            id="is-accepted"
+                            checked={isAccepted}
+                            onChange={e => setIsAccepted(e.target.checked)}
+                        />
+                        <label htmlFor="is-accepted">
+                            By creating an account you have to agree with our terms & conditions.
+                        </label>
                     </div>
+
+                    <button type="submit">Create account</button>
                 </form>
 
                 <div>
-                    <p>Already have an account？  <Link href='/Login'>Log in</Link></p>
+                    <p>
+                        Already have an account? <Link href='/Login'>Log in</Link>
+                    </p>
                 </div>
             </div>
         </div>
-    )
+    );
 }
