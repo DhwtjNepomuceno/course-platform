@@ -7,10 +7,10 @@ export default function Signup() {
 
     return (
         <div className="grid place-items-center mt-12">
-            <h1>Sign Up</h1>
+            <h1 className="text-[32px]">Sign Up</h1>
             <p>Enter your details below & free sign up</p>
 
-            <div>
+            <div className=" min-w-screen bg-gray-700">
                 <form>
                     <div>
                         <label htmlFor="email">Your  Email</label>
