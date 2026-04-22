@@ -1,20 +1,18 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
-// Exemplo didático: capturando dados do formulário com useState e onSubmit
+type SignupFields = {
+    email: string;
+    password: string;
+    isAccepted: string;
+}
+
 export default function Signup() {
-    // Criando estados para cada campo do formulário
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [isAccepted, setIsAccepted] = useState(false);
+    const { register, handleSubmit, formState: { errors } } = useForm<SignupFields>();
 
-    // Função chamada ao enviar o formulário
-    function handleSubmit(event: React.SubmitEvent<HTMLFormElement>): void {
-        event.preventDefault(); // Evita o recarregamento da página
-        // Exibe os dados no console (poderia enviar para uma API)
-        console.log({ email, password, isAccepted });
-        // Aqui você pode adicionar validações ou limpar o formulário
+    function handleSubmitFn(data: SignupFields): void {
+        console.log(data)
     }
 
     return (
@@ -23,17 +21,16 @@ export default function Signup() {
             <p>Enter your details below & free sign up</p>
 
             <div className=" min-w-screen bg-gray-700">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit(handleSubmitFn)}>
                     <div>
                         <label htmlFor="email">Your Email</label>
                         <input
                             className="bg-gray-600"
                             id="email"
                             type="email"
-                            value={email} // Valor controlado pelo estado
-                            onChange={e => setEmail(e.target.value)} // Atualiza o estado
-                            required
+                            { ...register('email', { required: true }) }
                         />
+                        { errors.email && <span className="text-red-500">Se mate! você deve ter um email.</span> }
                     </div>
 
                     <div>
@@ -42,23 +39,23 @@ export default function Signup() {
                             className="bg-gray-600"
                             id="password"
                             type="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
                             minLength={6}
-                            required
+                            { ...register('password', { required: true, minLength: 6 })}
                         />
+                        { errors.password?.type === "required" && <span className="text-red-500">Você deve ter uma senha, inútil!</span> }
+                        { errors.password?.type === "minLength" && <span className="text-red-500">Sua senha deve ter no mínimo 6 caracteres, cabaço!</span> }
                     </div>
 
                     <div>
                         <input
-                            type="checkbox"
                             id="is-accepted"
-                            checked={isAccepted}
-                            onChange={e => setIsAccepted(e.target.checked)}
+                            type="checkbox"
+                            { ...register('isAccepted', { required: true })}
                         />
                         <label htmlFor="is-accepted">
                             By creating an account you have to agree with our terms & conditions.
                         </label>
+                        { errors.isAccepted && <span className="text-red-500">Você quer criar a conta sem aceitar os termos, animal?!</span> }
                     </div>
 
                     <button type="submit">Create account</button>
