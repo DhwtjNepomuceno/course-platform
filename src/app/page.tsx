@@ -10,9 +10,11 @@ export default function Home() {
       <p className="w-[80vw] text-[16px] max-w-47.5 mt-6">Study according to the study plan, make study more motivated</p>
 
       <div className="flex gap-4 content-end-safe mt-25">
-        <Link className="bg-blue-600 pr-13 pl-13 pt-3 pb-3 rounded-xl" href='/Signup'>Sign up</Link>
+        <Link className="bg-blue-600 pr-13 pl-13 pt-3 pb-3 rounded-xl hover:bg-blue-500"
+          href='/Signup'>Sign up</Link>
 
-        <Link className="bg-gray-500 pr-13 pl-13 pt-3 pb-3 rounded-xl" href='/Login'>Log in</Link>
+        <Link className="bg-gray-500 pr-13 pl-13 pt-3 pb-3 rounded-xl hover:bg-gray-400"
+          href='/Login'>Log in</Link>
       </div>
     </div>
   );
