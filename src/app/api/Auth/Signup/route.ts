@@ -1,28 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-
-import { SignupFields } from "@/app/utils";
+import { prisma } from "@/lib/prisma";
+import { SignupFields } from "@/utils";
+import { hashPassword } from "@/utils/hash";
 
 export async function POST(req: NextRequest) {
   try {
     const body: SignupFields = await req.json();
     console.log("Body received:", body);
+    const hashedPassword = await hashPassword(body.password);
 
-    if (!body.email || !body.password || !body.isAccepted) {
+    if (!body.email) {
       return NextResponse.json(
-        { error: "E-mail, password and accepting the Therms are required." },
+        { error: "E-mail is required." },
         { status: 400 },
       );
     }
 
-    return NextResponse.json(
-      {
-        message: "Data successfuly received.",
-        data: body,
+    if (!body.password) {
+      return NextResponse.json(
+        { error: "Password is required." },
+        { status: 400 },
+      );
+    }
+    const createdUser = await prisma.user.create({
+      data: {
+        name: body.name,
+        birthday: new Date(body.birthday),
+        email: body.email,
+        password: hashedPassword,
       },
-      { status: 200 },
-    );
+    });
+
+    return NextResponse.json({
+      message: "Data successfuly received.",
+      data: createdUser,
+      status: 200,
+    });
   } catch (error) {
-    console.error("Unexpected issue to procees the request", error)
+    console.error("Unexpected issue to procees the request", error);
     return NextResponse.json(
       { error: "Unexpected issue to process the request." },
       { status: 500 },

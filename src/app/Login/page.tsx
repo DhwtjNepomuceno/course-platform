@@ -10,9 +10,22 @@ type LoginFields = {
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFields>()
 
-  function handleSubmitFn(data: LoginFields): void {
-    console.log(data)
-  }
+   async function handleSubmitFn(data: LoginFields) {
+          try {
+              const response = await fetch("/api/Auth/Login", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(data)
+              })
+              const result = await response.json()
+              console.log(result)
+          } catch (error) {
+              console.error(error)
+          }
+      }
+  
 
   return (
     <div className="grid place-items-center mt-12">
@@ -28,6 +41,7 @@ export default function Login() {
                 ${errors.email && "outline outline-red-600"}`}
               id="email"
               type="email"
+              autoComplete="email"
               {...register('email', { required: true })}
             />
             {errors.email && <span className="text-red-600 text-[12px] max-w-81.5">
@@ -41,6 +55,7 @@ export default function Login() {
                 ${errors.password && "outline outline-red-600"}`}
               id="password"
               type="password"
+              autoComplete="password"
               minLength={6}
               {...register('password', { required: true, minLength: 6 })}
             />

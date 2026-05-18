@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Status {
+  Not_Started
+  Active
+  Concluded
+  Paused
+}
+
+model User {
+  id        String       @id @default(uuid())
+  email     String       @unique
+  password  String
+  name      String
+  birthday  DateTime
+  token     String       @default("")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  courses   Course[]
+  enrolled  Enrollment[]
+}
+
+model Course {
+  id          String       @id @default(uuid())
+  name        String
+  description String
+  price       Decimal
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  authorId    String
+  author      User         @relation(fields: [authorId], references: [id])
+  classes     Class[]
+  enrolled    Enrollment[]
+}
+
+model Class {
+  id              String   @id @default(uuid())
+  title           String
+  orderInCourse   Int
+  durationMinutes Int
+  videoUrl        String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  courseId        String
+  course          Course   @relation(fields: [courseId], references: [id])
+}
+
+model Enrollment {
+  id            String   @id @default(uuid())
+  usersEnrolled User[]
+  status        Status   @default(Not_Started)
+  course        Course   @relation(fields: [courseId], references: [id])
+  courseId      String
+  enrolledAt    DateTime @default(now())
+}

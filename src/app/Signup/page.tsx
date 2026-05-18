@@ -1,13 +1,13 @@
 "use client";
 
-import { SignupFields } from "../utils";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { SignupFieldsUI } from "../../utils";
 
 export default function Signup() {
-    const { register, handleSubmit, formState: { errors } } = useForm<SignupFields>();
+    const { register, handleSubmit, formState: { errors } } = useForm<SignupFieldsUI>();
 
-    async function handleSubmitFn(data: SignupFields) {
+    async function handleSubmitFn(data: SignupFieldsUI) {
         try {
             const response = await fetch("/api/Auth/Signup", {
                 method: "POST",
@@ -32,13 +32,43 @@ export default function Signup() {
                 <form onSubmit={handleSubmit(handleSubmitFn)}>
 
                     <div className="grid mt-2.5 w-81.5">
-                        <label htmlFor="email">Your E-mail</label>
+                        <label htmlFor="name">Full name</label>
                         <input
-                            className={`bg-gray-600 w-81.5 h-12.5 rounded-[8]
+                            className={`bg-gray-600 w-81.5 h-12.5 rounded-[8] pl-2
+                                ${errors.name && "outline outline-red-600"}`}
+                            id="name"
+                            type="text"
+                            autoComplete="name"
+                            minLength={6}
+                            {...register('name', { required: true })}
+                        />
+                        {errors.name && <span className="text-red-600 text-[12px] max-w-81.5">
+                            * You must enter your full name.</span>}
+                    </div>
+
+                    <div className="grid mt-2.5 w-81.5">
+                        <label htmlFor="birthday">Birthday</label>
+                        <input
+                            className={`bg-gray-600 w-81.5 h-12.5 rounded-[8] pl-2
+                                ${errors.birthday && "outline outline-red-600"}`}
+                            id="birthday"
+                            type="date"
+                            autoComplete="bday-day"
+                            {...register('birthday', { required: true })}
+                        />
+                        {errors.birthday && <span className="text-red-600 text-[12px] max-w-81.5">
+                            * You must enter your birthday.</span>}
+                    </div>
+
+                    <div className="grid mt-2.5 w-81.5">
+                        <label htmlFor="email">E-mail</label>
+                        <input
+                            className={`bg-gray-600 w-81.5 h-12.5 rounded-[8] pl-2
                                 ${errors.email && "outline outline-red-600"}`}
                             id="email"
                             type="email"
-                            {...register('email', { required: true })}
+                            autoComplete="email"
+                            {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
                         />
                         {errors.email && <span className="text-red-600 text-[12px] max-w-81.5">
                             * You must enter your e-mail adress.</span>}
@@ -47,10 +77,11 @@ export default function Signup() {
                     <div className="grid mt-2.5 w-81.5">
                         <label htmlFor="password">Password</label>
                         <input
-                            className={`bg-gray-600 w-81.5 h-12.5 rounded-[8]
+                            className={`bg-gray-600 w-81.5 h-12.5 rounded-[8] pl-2
                                 ${errors.password && "outline outline-red-600"}`}
                             id="password"
                             type="password"
+                            autoComplete="password"
                             minLength={6}
                             {...register('password', { required: true, minLength: 6 })}
                         />
