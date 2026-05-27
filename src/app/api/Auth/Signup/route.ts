@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { SignupFields } from "@/utils";
+import { BackSignupFields } from "@/utils";
 import { hashPassword } from "@/utils/hash";
 
 export async function POST(req: NextRequest) {
   try {
-    const body: SignupFields = await req.json();
+    const body: BackSignupFields = await req.json();
     console.log("Body received:", body);
     const hashedPassword = await hashPassword(body.password);
 

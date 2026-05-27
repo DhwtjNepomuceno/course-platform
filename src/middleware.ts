@@ -1,5 +1,7 @@
-import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
+import { jwtVerify } from "jose";
+
+const SECRET = new TextEncoder().encode(process.env.JWT_SECRET)
 
 export async function middleware(req: NextRequest) {
   const auth = req.headers.get("authorization");
@@ -9,11 +11,14 @@ export async function middleware(req: NextRequest) {
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : auth;
 
   try {
-    jwt.verify(token, process.env.JWT_SECRET!);
+    await jwtVerify(token, SECRET);
 
     return NextResponse.next();
-  } catch (e: unknown) {
-    console.log(e)
+  } catch {
     return NextResponse.redirect(new URL("/Login", req.url));
   }
+}
+
+export const config = {
+  matcher: ["/api/Users"]
 }

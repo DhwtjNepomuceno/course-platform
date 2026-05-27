@@ -1,31 +1,27 @@
 "use client";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-
-type LoginFields = {
-  email: string,
-  password: string
-}
+import { LoginFields } from "@/utils";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFields>()
 
-   async function handleSubmitFn(data: LoginFields) {
-          try {
-              const response = await fetch("/api/Auth/Login", {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify(data)
-              })
-              const result = await response.json()
-              console.log(result)
-          } catch (error) {
-              console.error(error)
-          }
-      }
-  
+  async function handleSubmitFn(data: LoginFields) {
+    try {
+      const response = await fetch("/api/Auth/Login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      const result = await response.json()
+      console.log(result)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
 
   return (
     <div className="grid place-items-center mt-12">
@@ -37,10 +33,11 @@ export default function Login() {
           <div className="grid mt-2.5 w-81.5">
             <label htmlFor="email">Your E-mail</label>
             <input
-              className={`bg-gray-600 w-81.5 h-12.5 rounded-[8] 
+              className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
                 ${errors.email && "outline outline-red-600"}`}
               id="email"
               type="email"
+              placeholder="E-mail"
               autoComplete="email"
               {...register('email', { required: true })}
             />
@@ -51,10 +48,11 @@ export default function Login() {
           <div className="grid mt-2.5 w-81.5">
             <label htmlFor="password">Password</label>
             <input
-              className={`bg-gray-600 w-81.5 h-12.5 rounded-[8]
+              className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
                 ${errors.password && "outline outline-red-600"}`}
               id="password"
               type="password"
+              placeholder="Password"
               autoComplete="password"
               minLength={6}
               {...register('password', { required: true, minLength: 6 })}
@@ -68,20 +66,21 @@ export default function Login() {
           </div>
 
           <div className="w-full text-right">
-            <Link className="text-[14px] text-gray-300" href='/ForgotPassword'>Forgot your password?</Link>
+            <Link className="text-[14px] text-gray-400 hover:text-gray-300 hover:underline"
+              href='/ForgotPassword'>Forgot your password?</Link>
           </div>
 
           <button
-            className="bg-blue-600 w-81.5 h-12.5 rounded-xl mt-5 mb-5 hover:bg-blue-500"
+            className="bg-blue-600 w-81.5 h-12.5 rounded-lg mt-5 mb-1 hover:bg-blue-500"
             type="submit">Log in</button>
 
         </form>
         <div>
 
-          <p className="text-[12px] mt-4">Doesn&apos;t have an account? <Link
+          <Link href='/Signup' className="text-[12px] mt-4">Doesn&apos;t have an account? <Link
             className="text-blue-500 hover:text-blue-400 hover:underline"
             href='/Signup'>Sign Up</Link>
-          </p>
+          </Link>
 
         </div>
 
