@@ -6,10 +6,17 @@ import { SignupFields } from "../../utils";
 import { useRouter } from "next/navigation";
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 import { User } from "@/interfaces/user";
+import { login, useAuth } from "@/context/AuthContext";
+import { useEffect } from "react";
 
 export default function Signup() {
     const { register, handleSubmit, formState: { errors } } = useForm<SignupFields>();
-    const router = useRouter();
+    const router = useRouter(); 
+    const { token, setToken } = useAuth();
+    
+    useEffect(() => {
+        if (token) router.replace("/Home")
+    }, [router, token])
 
     async function handleSubmitFn(data: SignupFields) {
         try {
@@ -23,9 +30,13 @@ export default function Signup() {
             const result: ApiResponseData<User> | ApiResponseError = await response.json()
             console.log(result)
 
-            if(result.successed) router.replace("/Home")
+            if (!result.successed || !("data" in result)) throw new Error('Eu não sei!!!!');
 
+            login(result.data.token);
+            setToken(result.data.token);
+            router.replace("/Home")
         } catch (error) {
+            alert(error)
             console.error(error)
         }
     }

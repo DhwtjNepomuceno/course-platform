@@ -3,17 +3,17 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { LoginFields } from "@/utils";
 import { useRouter } from "next/navigation";
-import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 import { login, useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
+import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFields>()
   const router = useRouter();
-  const t = useAuth().token
+  const { token, setToken } = useAuth();
   useEffect(() => {
-    if (t) router.replace("/Home")
-  }, [router, t])
+    if (token) router.replace("/Home")
+  }, [router, token])
 
   async function handleSubmitFn(data: LoginFields) {
     try {
@@ -24,13 +24,17 @@ export default function Login() {
         },
         body: JSON.stringify(data)
       })
-      const result = await response.json()
+      const result: ApiResponseData<string> | ApiResponseError = await response.json()
       console.log(result)
 
-      router.replace("../Home")
+      if (!result.successed || !("data" in result)) throw new Error('Eu não sei!!!!');
+
       login(result.data);
+      setToken(result.data);
+      router.replace("/Home")
 
     } catch (error) {
+      alert(error)
       console.error(error)
     }
   }

@@ -19,13 +19,14 @@ export function login(token: string) {
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const t = localStorage.getItem("token");
         if (t) {
             setToken(t);
         }
+        setLoading(false);
     }, [])
 
     function logout() {
