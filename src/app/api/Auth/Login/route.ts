@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   if (!body) {
     return NextResponse.json(
       { error: "Failed to login: no data" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -20,33 +20,29 @@ export async function POST(req: NextRequest) {
   if (!user) {
     return NextResponse.json(
       { error: "Email or password incorrect." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
-  const correctPassword = await bcryptjs.compare(
-    body.password,
-    user.password
-  );
+  const correctPassword = await bcryptjs.compare(body.password, user.password);
 
   if (!correctPassword) {
     return NextResponse.json(
       { error: "Email or password incorrect." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
-  const token = jwt.sign(
-    { email: user.email },
-    process.env.JWT_SECRET!,
-    { expiresIn: "1d" }
-  );
+  const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET!, {
+    expiresIn: "1d",
+  });
 
-  return NextResponse.json(
-    {
-      message: "Login bem-sucedido",
-      token,
-    },
-    { status: 200 }
-  );
+  const response = NextResponse.json({
+  message: "Login bem-sucedido",
+  data: token,
+  successed: true,
+  status: 200
+});
+
+return response;
 }

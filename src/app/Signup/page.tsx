@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { SignupFields } from "../../utils";
+import { useRouter } from "next/navigation";
+import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
+import { User } from "@/interfaces/user";
 
 export default function Signup() {
     const { register, handleSubmit, formState: { errors } } = useForm<SignupFields>();
+    const router = useRouter();
 
     async function handleSubmitFn(data: SignupFields) {
         try {
@@ -16,8 +20,11 @@ export default function Signup() {
                 },
                 body: JSON.stringify(data)
             })
-            const result = await response.json()
+            const result: ApiResponseData<User> | ApiResponseError = await response.json()
             console.log(result)
+
+            if(result.successed) router.replace("/Home")
+
         } catch (error) {
             console.error(error)
         }
@@ -126,10 +133,7 @@ export default function Signup() {
                 </form>
 
                 <div>
-                    <Link href='/Login' className="text-[12px] mt-4">Already have an account? <Link
-                        className="text-blue-500 hover:text-blue-400 hover:underline"
-                        href='/Login'>Log in</Link>
-                    </Link>
+                    <Link href='/Login' className="text-[12px] mt-4">Already have an account? <span className="text-blue-600 hover:underline hover:text-blue-500">Log in</span></Link>
                 </div>
             </div>
         </div>

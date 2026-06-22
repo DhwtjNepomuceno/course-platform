@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { BackSignupFields } from "@/utils";
 import { hashPassword } from "@/utils/hash";
+import jwt from 'jsonwebtoken';
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,24 +23,36 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
+
+    const token = jwt.sign(
+        { email: body.email },
+        process.env.JWT_SECRET!,
+        { expiresIn: "1d" }
+      );
+
     const createdUser = await prisma.user.create({
       data: {
         name: body.name,
         birthday: new Date(body.birthday),
         email: body.email,
         password: hashedPassword,
+        token
       },
     });
 
     return NextResponse.json({
       message: "Data successfuly received.",
+      successed: true,
       data: createdUser,
       status: 200,
     });
   } catch (error) {
     console.error("Unexpected issue to procees the request", error);
+
     return NextResponse.json(
-      { error: "Unexpected issue to process the request." },
+      { error: "Unexpected issue to process the request.", 
+        status: 500, 
+        successed: false },
       { status: 500 },
     );
   }

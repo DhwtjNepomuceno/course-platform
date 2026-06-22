@@ -2,9 +2,18 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { LoginFields } from "@/utils";
+import { useRouter } from "next/navigation";
+import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
+import { login, useAuth } from "@/context/AuthContext";
+import { useEffect } from "react";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFields>()
+  const router = useRouter();
+  const t = useAuth().token
+  useEffect(() => {
+    if (t) router.replace("/Home")
+  }, [router, t])
 
   async function handleSubmitFn(data: LoginFields) {
     try {
@@ -17,11 +26,14 @@ export default function Login() {
       })
       const result = await response.json()
       console.log(result)
+
+      router.replace("../Home")
+      login(result.data);
+
     } catch (error) {
       console.error(error)
     }
   }
-
 
   return (
     <div className="grid place-items-center mt-12">
@@ -77,10 +89,8 @@ export default function Login() {
         </form>
         <div>
 
-          <Link href='/Signup' className="text-[12px] mt-4">Doesn&apos;t have an account? <Link
-            className="text-blue-500 hover:text-blue-400 hover:underline"
-            href='/Signup'>Sign Up</Link>
-          </Link>
+          <Link href='/Signup' className="text-[12px] mt-4">Doesn&apos;t have an account?
+            <span className="text-blue-600 hover:underline hover:text-blue-500">Sign Up</span></Link>
 
         </div>
 
