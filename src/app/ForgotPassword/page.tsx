@@ -1,13 +1,13 @@
 "use client"
 
-import { DefaultFields } from "@/utils"
+import { ForgotPasswordForm } from "@/utils"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 
 export default function ForgotPassword() {
-    const { register, handleSubmit, formState: { errors } } = useForm<DefaultFields>()
+    const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordForm>()
 
-    async function handleSubmitFn(data: DefaultFields) {
+    async function handleSubmitFn(data: ForgotPasswordForm) {
         try {
             const response = await fetch("api/Auth/ForgotPassword", {
                 method: "POST",

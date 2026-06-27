@@ -1,21 +1,21 @@
 "use client";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { LoginFields } from "@/utils";
+import { LoginForm } from "@/utils";
 import { useRouter } from "next/navigation";
 import { login, useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 
 export default function Login() {
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFields>()
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>()
   const router = useRouter();
   const { token, setToken } = useAuth();
   useEffect(() => {
     if (token) router.replace("/Home")
   }, [router, token])
 
-  async function handleSubmitFn(data: LoginFields) {
+  async function handleSubmitFn(data: LoginForm) {
     try {
       const response = await fetch("/api/Auth/Login", {
         method: "POST",
@@ -43,13 +43,13 @@ export default function Login() {
     <div className="grid place-items-center mt-12">
       <h1 className="text-[32px]">Log In</h1>
 
-      <div className=" min-w-screen min-h-screen bg-gray-700 rounded-2xl mt-3 justify-items-center">
+      <div className=" min-w-screen min-h-screen bg-[#2F2F42] rounded-2xl mt-3 justify-items-center">
         <form onSubmit={handleSubmit(handleSubmitFn)}>
 
           <div className="grid mt-2.5 w-81.5">
-            <label htmlFor="email">Your E-mail</label>
+            <label className="text-[#858597] ml-1" htmlFor="email">Your E-mail</label>
             <input
-              className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
+              className={`bg-[#3E3E55] w-81.5 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-[#61617e] hover:placeholder:text-gray-300
                 ${errors.email && "outline outline-red-600"}`}
               id="email"
               type="email"
@@ -62,9 +62,9 @@ export default function Login() {
           </div>
 
           <div className="grid mt-2.5 w-81.5">
-            <label htmlFor="password">Password</label>
+            <label className="text-[#858597] ml-1" htmlFor="password">Password</label>
             <input
-              className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
+              className={`bg-[#3E3E55] w-81.5 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-[#61617e] hover:placeholder:text-gray-300
                 ${errors.password && "outline outline-red-600"}`}
               id="password"
               type="password"
@@ -82,19 +82,19 @@ export default function Login() {
           </div>
 
           <div className="w-full text-right">
-            <Link className="text-[14px] text-gray-400 hover:text-gray-300 hover:underline"
+            <Link className="text-[14px] text-[#858597] hover:text-[#aeaec0] hover:underline"
               href='/ForgotPassword'>Forgot your password?</Link>
           </div>
 
           <button
-            className="bg-blue-600 w-81.5 h-12.5 rounded-lg mt-5 mb-1 hover:bg-blue-500"
+            className="bg-[#3D5CFF] w-81.5 h-12.5 rounded-lg mt-5 mb-1 hover:bg-[#5d76f7]"
             type="submit">Log in</button>
 
         </form>
         <div>
 
-          <Link href='/Signup' className="text-[12px] mt-4">Doesn&apos;t have an account?
-            <span className="text-blue-600 hover:underline hover:text-blue-500">Sign Up</span></Link>
+          <Link href='/Signup' className="text-[14px] text-gray-400 mt-4">Doesn&apos;t have an account?
+            <span className="text-[#5d76f7] hover:underline hover:text-[#9aa7e9]"> Sign Up</span></Link>
 
         </div>
 

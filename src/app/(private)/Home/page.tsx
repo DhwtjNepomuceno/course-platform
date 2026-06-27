@@ -1,5 +1,45 @@
 "use client"
 
-export default function Home() {
-    return <h1>Hello World</h1>
+export default function HomePage() {
+
+  return (
+    <main className="flex h-screen flex-col bg-[#1E1D35]">
+
+      <header className="bg-blue-500 px-8 pt-14 pb-10">
+        <h1 className="text-4xl font-bold text-white">
+          
+        </h1>
+
+        <p className="mt-2 text-lg text-blue-100">
+          Let&apos;s start learning
+        </p>
+      </header>
+
+      <section className="flex-1 bg-[#1E1D35]" />
+
+      <footer className="h-20 border-t border-white/10 bg-[#23223E]">
+        <nav className="flex h-full items-center justify-around text-sm text-gray-400">
+          <button className="transition hover:text-white">
+            Home
+          </button>
+
+          <button className="transition hover:text-white">
+            Course
+          </button>
+
+          <button className="transition hover:text-white">
+            Search
+          </button>
+
+          <button className="transition hover:text-white">
+            Message
+          </button>
+
+          <button className="transition hover:text-white">
+            Account
+          </button>
+        </nav>
+      </footer>
+    </main>
+  );
 }

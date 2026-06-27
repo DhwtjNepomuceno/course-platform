@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { SignupFields } from "../../utils";
+import { SignupForm } from "@/utils";
 import { useRouter } from "next/navigation";
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 import { User } from "@/interfaces/user";
@@ -10,7 +10,7 @@ import { login, useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
 
 export default function Signup() {
-    const { register, handleSubmit, formState: { errors } } = useForm<SignupFields>();
+    const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>();
     const router = useRouter(); 
     const { token, setToken } = useAuth();
     
@@ -18,7 +18,7 @@ export default function Signup() {
         if (token) router.replace("/Home")
     }, [router, token])
 
-    async function handleSubmitFn(data: SignupFields) {
+    async function handleSubmitFn(data: SignupForm) {
         try {
             const response = await fetch("/api/Auth/Signup", {
                 method: "POST",
@@ -30,7 +30,7 @@ export default function Signup() {
             const result: ApiResponseData<User> | ApiResponseError = await response.json()
             console.log(result)
 
-            if (!result.successed || !("data" in result)) throw new Error('Eu não sei!!!!');
+            if (!result.successed || !("data" in result)) throw new Error('Unexpected error, try again later.');
 
             login(result.data.token);
             setToken(result.data.token);

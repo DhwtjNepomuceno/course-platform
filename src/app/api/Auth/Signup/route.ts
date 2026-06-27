@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { BackSignupFields } from "@/utils";
+import { SignupRequest } from "@/utils";
 import { hashPassword } from "@/utils/hash";
 import jwt from 'jsonwebtoken';
 
 export async function POST(req: NextRequest) {
   try {
-    const body: BackSignupFields = await req.json();
+    const body: SignupRequest = await req.json();
     console.log("Body received:", body);
     const hashedPassword = await hashPassword(body.password);
 

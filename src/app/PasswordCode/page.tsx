@@ -1,13 +1,13 @@
 "use client"
 
-import { DefaultFields } from "@/utils"
+import { ForgotPasswordForm } from "@/utils"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 
 export default function ForgotPassword() {
-    const { handleSubmit, formState: { errors } } = useForm<DefaultFields>()
+    const { handleSubmit, formState: { errors } } = useForm<ForgotPasswordForm>()
 
-    async function handleSubmitFn(data: DefaultFields) {
+    async function handleSubmitFn(data: ForgotPasswordForm) {
         try {
             const response = await fetch("api/Auth/ForgotPassword", {
                 method: "POST",
@@ -53,7 +53,7 @@ export default function ForgotPassword() {
                 ))}
 
             </div>
-                {errors.code && (
+                {errors.confirmationCode && (
                 <span className="text-red-600 text-[12px] mb-2">
                     * You must enter the correct code.
                 </span>

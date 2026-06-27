@@ -1,18 +1,21 @@
-export interface DefaultFields {
+export interface ForgotPasswordForm {
     email: string;
-    code: string;
+    confirmationCode: string;
+    newPassword: string
 }
 
-export interface LoginFields extends DefaultFields {
+export interface LoginForm {
+    email: string
     password: string;
 }
 
-export interface BackSignupFields extends DefaultFields {
+export interface SignupRequest {
     name: string;
+    email: string
     birthday: Date;
     password: string;
 }
 
-export interface SignupFields extends BackSignupFields {
+export interface SignupForm extends SignupRequest {
     isAccepted: boolean;
 }
