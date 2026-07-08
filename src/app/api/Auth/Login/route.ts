@@ -37,19 +37,19 @@ export async function POST(req: NextRequest) {
     expiresIn: "1d",
   });
 
-
-
   const response = NextResponse.json({
-  message: "Login bem-sucedido",
-  data: token,
-  user: {
-    id: user.id,
-    name: user.name,
-    email: user.email
-  },
-  successed: true,
-  status: 200
-});
+    message: "Login bem-sucedido",
+    data: {
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    },
+    successed: true,
+    status: 200,
+  });
 
-return response;
+  return response;
 }

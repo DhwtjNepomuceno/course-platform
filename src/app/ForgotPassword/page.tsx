@@ -24,16 +24,20 @@ export default function ForgotPassword() {
     }
     return (
         <div className="grid place-items-center mt-12">
-            <h1 className="text-[32px]">Forgot my password</h1>
+            <div className="flex items-center text-[20px]">
+               <h1>&lt; </h1>
+            <h1 className="text-[20px]">Continue with e-mail adress</h1> 
+            </div>
+            
             <p className="text-center text-gray-400 max-w-100">In order to reset your password, enter your e-mail and we&apos;ll send a code.</p>
 
-            <div className="min-w-screen min-h-screen bg-gray-700 rounded-2xl mt-3 justify-items-center">
+            <div className="min-w-screen min-h-screen bg-[#2F2F42] rounded-2xl mt-3 justify-items-center">
                 <form onSubmit={handleSubmit(handleSubmitFn)}>
 
                     <div className="grid mt-2.5 w-81.5">
                         <label htmlFor="email">Your E-mail</label>
                         <input
-                            className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
+                            className={`bg-[#3E3E55] w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
                             ${errors.email && "outline outline-red-600"}`}
                             id="email"
                             type="email"

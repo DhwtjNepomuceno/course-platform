@@ -24,13 +24,22 @@ export default function Login() {
         },
         body: JSON.stringify(data)
       })
-      const result: ApiResponseData<string> | ApiResponseError = await response.json()
+      const result: ApiResponseData<
+        {
+          token: string,
+          user: {
+            id: string,
+            name: string,
+            email: string
+          }
+        }
+      > | ApiResponseError = await response.json()
       console.log(result)
 
       if (!result.successed || !("data" in result)) throw new Error('Eu não sei!!!!');
 
       login(result.data);
-      setToken(result.data);
+      setToken(result.data.token);
       router.replace("/Home")
 
     } catch (error) {
