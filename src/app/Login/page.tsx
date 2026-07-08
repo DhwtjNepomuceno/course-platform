@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import { login, useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
+import { AuthPayload } from "@/interfaces/user";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>()
   const router = useRouter();
-  const { token, setToken } = useAuth();
+  const { token, setToken, setUser } = useAuth();
   useEffect(() => {
     if (token) router.replace("/Home")
   }, [router, token])
@@ -24,13 +25,17 @@ export default function Login() {
         },
         body: JSON.stringify(data)
       })
-      const result: ApiResponseData<string> | ApiResponseError = await response.json()
-      console.log(result)
+      const result: ApiResponseData<AuthPayload> | ApiResponseError = await response.json()
 
-      if (!result.successed || !("data" in result)) throw new Error('Eu não sei!!!!');
+      if (!result.successed || !("data" in result)) {
+        throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
+      }
 
-      login(result.data);
-      setToken(result.data);
+      const { token, user } = result.data;
+
+      login(token, user);
+      setToken(token);
+      setUser(user);
       router.replace("/Home")
 
     } catch (error) {

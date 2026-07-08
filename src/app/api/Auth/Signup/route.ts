@@ -43,7 +43,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       message: "Data successfuly received.",
       successed: true,
-      data: createdUser,
+      data: {
+        token,
+        user: {
+          id: createdUser.id,
+          name: createdUser.name,
+          email: createdUser.email,
+        },
+      },
       status: 200,
     });
   } catch (error) {

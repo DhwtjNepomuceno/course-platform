@@ -5,14 +5,14 @@ import { useForm } from "react-hook-form";
 import { SignupForm } from "@/utils";
 import { useRouter } from "next/navigation";
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
-import { User } from "@/interfaces/user";
+import { AuthPayload } from "@/interfaces/user";
 import { login, useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
 
 export default function Signup() {
     const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>();
-    const router = useRouter(); 
-    const { token, setToken } = useAuth();
+    const router = useRouter();
+    const { token, setToken, setUser } = useAuth();
     
     useEffect(() => {
         if (token) router.replace("/Home")
@@ -27,13 +27,17 @@ export default function Signup() {
                 },
                 body: JSON.stringify(data)
             })
-            const result: ApiResponseData<User> | ApiResponseError = await response.json()
-            console.log(result)
+            const result: ApiResponseData<AuthPayload> | ApiResponseError = await response.json()
 
-            if (!result.successed || !("data" in result)) throw new Error('Unexpected error, try again later.');
+            if (!result.successed || !("data" in result)) {
+                throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
+            }
 
-            login(result.data.token);
-            setToken(result.data.token);
+            const { token, user } = result.data;
+
+            login(token, user);
+            setToken(token);
+            setUser(user);
             router.replace("/Home")
         } catch (error) {
             alert(error)
