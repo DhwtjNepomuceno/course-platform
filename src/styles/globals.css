@@ -8,6 +8,27 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-surface-c: #2F2F42;
+  --color-input-c: #3E3E55;
+  --color-input-hover-c: #61617E;
+
+  --color-title-c: #FFFFFF;
+  --color-subtitle-c: #A8A8C5;
+  --color-label-c: #858597;
+  --color-placeholder-hover-c: #C3C3D9;
+  --color-text-c: #FFFFFF;
+  --color-link-c: #5D76F7;
+  --color-link-hover-c: #9AA7E9;
+  --color-error-c: #ED1111;
+
+  --color-button-c: #3D5CFF;
+  --color-button-hover-c: #5D76F7;
+
+  --text-title-t: 32px;
+  --text-subtitle-t: 15.5px;
+  --text-error-t: 12px;
+
   --font-sans: var(--font-poppins-sans);
 }
 
