@@ -41,7 +41,7 @@ export default function ForgotPassword() {
             <div className="w-screen h-screen bg-surface-c rounded-2xl mt-3">
                 {submitted ? (
                     <div className="justify-items-center">
-                        <div className="grid mt-[36px] w-81.5">
+                        <div className="grid mt-9 w-81.5">
                             <h1 className="text-[15px] text-center">A Link was sent to your e-mail. If you can&apos;t find it, check on spam</h1>
                             <button
                                 className="bg-blue-600 w-81.5 h-12.5 rounded-lg mt-5 mb-1 hover:bg-blue-500"
