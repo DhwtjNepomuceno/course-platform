@@ -47,7 +47,7 @@ export default function Signup() {
 
     return (
         <div className="grid place-items-center mt-12">
-            <h1 className="text-[32px]">Sign Up</h1>
+            <h1 className="text-title-t">Sign Up</h1>
             <p className="text-center text-gray-400">Enter your details below & free sign up</p>
 
             <div className=" min-w-screen min-h-screen bg-gray-700 rounded-2xl mt-3 justify-items-center">
@@ -65,7 +65,7 @@ export default function Signup() {
                             minLength={6}
                             {...register('name', { required: true })}
                         />
-                        {errors.name && <span className="text-red-600 text-[12px] max-w-81.5">
+                        {errors.name && <span className="text-red-600 text-error-t max-w-81.5">
                             * You must enter your full name.</span>}
                     </div>
 
@@ -79,7 +79,7 @@ export default function Signup() {
                             autoComplete="bday-day"
                             {...register('birthday', { required: true })}
                         />
-                        {errors.birthday && <span className="text-red-600 text-[12px] max-w-81.5">
+                        {errors.birthday && <span className="text-red-600 text-error-t max-w-81.5">
                             * You must enter your birthday.</span>}
                     </div>
 
@@ -94,7 +94,7 @@ export default function Signup() {
                             autoComplete="email"
                             {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
                         />
-                        {errors.email && <span className="text-red-600 text-[12px] max-w-81.5">
+                        {errors.email && <span className="text-red-600 text-error-t max-w-81.5">
                             * You must enter your e-mail adress.</span>}
                     </div>
 
@@ -111,11 +111,11 @@ export default function Signup() {
                             {...register('password', { required: true, minLength: 6 })}
                         />
                         {errors.password?.type === "required" &&
-                            <span className="text-red-600 text-[12px] max-w-81.5">
+                            <span className="text-red-600 text-error-t max-w-81.5">
                                 * You must enter your password.</span>
                         }
                         {errors.password?.type === "minLength" &&
-                            <span className="text-red-600 text-[12px] max-w-81.5">
+                            <span className="text-red-600 text-error-t max-w-81.5">
                                 Your password must be 6 characteres or more.</span>
                         }
                     </div>
@@ -133,12 +133,12 @@ export default function Signup() {
                         />
                         <div className="grid gap-1">
                             <label
-                                className="text-[12px] max-w-81.5 leading-tight hover:underline"
+                                className="text-error-t max-w-81.5 leading-tight hover:underline"
                                 htmlFor="is-accepted">
                                 By creating an account you have to agree with our terms & conditions.
                             </label>
                             {errors.isAccepted &&
-                                <span className="text-red-600 text-[12px]">
+                                <span className="text-red-600 text-error-t">
                                     * You must accept the terms before signing up.</span>}
                         </div>
                     </div>
@@ -148,7 +148,7 @@ export default function Signup() {
                 </form>
 
                 <div>
-                    <Link href='/Login' className="text-[12px] mt-4">Already have an account? <span className="text-blue-600 hover:underline hover:text-blue-500">Log in</span></Link>
+                    <Link href='/Login' className="text-error-t mt-4">Already have an account? <span className="text-blue-600 hover:underline hover:text-blue-500">Log in</span></Link>
                 </div>
             </div>
         </div>

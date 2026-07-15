@@ -1,7 +1,5 @@
 export interface ForgotPasswordForm {
     email: string;
-    confirmationCode: string;
-    newPassword: string
 }
 
 export interface LoginForm {
