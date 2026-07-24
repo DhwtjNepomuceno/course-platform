@@ -2,30 +2,63 @@
 
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { SignupForm } from "@/utils";
+import { SignupForm, SignupRequest } from "@/utils";
 import { useRouter } from "next/navigation";
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 import { AuthPayload } from "@/interfaces/user";
 import { login, useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
+import Input from "@/components/Input";
 
 export default function Signup() {
     const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>();
     const router = useRouter();
     const { token, setToken, setUser } = useAuth();
-    
+
+    const days = Array.from(
+        { length: 31 },
+        (_, index) => index + 1
+    );
+
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ]
+
+    const years = Array.from(
+        { length: 2010 - 1920 + 1 },
+        (_, index) => index + 1920
+    );
+
     useEffect(() => {
         if (token) router.replace("/Home")
     }, [router, token])
 
     async function handleSubmitFn(data: SignupForm) {
         try {
+            const request: SignupRequest = {
+                name: `${data.fullName.name} ${data.fullName.surname}`,
+                email: data.email,
+                birthday: data.birthday.day + data.birthday.month + data.birthday.year,
+                password: data.password,
+            };
+
             const response = await fetch("/api/Auth/Signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(request)
             })
             const result: ApiResponseData<AuthPayload> | ApiResponseError = await response.json()
 
@@ -48,97 +81,125 @@ export default function Signup() {
     return (
         <div className="grid place-items-center mt-12">
             <h1 className="text-title-t">Sign Up</h1>
-            <p className="text-center text-gray-400">Enter your details below & free sign up</p>
+            <p className="text-center text-subtitle-c text-subtitle-t">Enter your details below & free sign up</p>
 
-            <div className=" min-w-screen min-h-screen bg-gray-700 rounded-2xl mt-3 justify-items-center">
+            <div className=" min-w-screen min-h-screen bg-surface-c rounded-2xl mt-3 justify-items-center">
                 <form onSubmit={handleSubmit(handleSubmitFn)}>
 
-                    <div className="grid mt-2.5 w-81.5">
-                        <label htmlFor="name">Name</label>
-                        <input
-                            className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
-                                ${errors.name && "outline outline-red-600"}`}
-                            id="name"
-                            type="text"
-                            placeholder="Full name"
-                            autoComplete="name"
-                            minLength={6}
-                            {...register('name', { required: true })}
-                        />
-                        {errors.name && <span className="text-red-600 text-error-t max-w-81.5">
-                            * You must enter your full name.</span>}
+                    <Input
+                        label="Your First Name"
+                        id="name"
+                        type="text"
+                        placeholder="Name"
+                        autoComplete="name"
+                        minLength={6}
+                        error={!!errors.fullName?.name}
+                        errorMessage="* You must enter your name."
+                        register={register("fullName.name", { required: true })}
+                    />
+
+                    <Input
+                        label="Your Last Name"
+                        id="surname"
+                        type="text"
+                        placeholder="Surname"
+                        autoComplete="name"
+                        minLength={6}
+                        error={!!errors.fullName?.surname}
+                        errorMessage="* You must enter your last name."
+                        register={register("fullName.surname", { required: true })}
+                    />
+
+                    <div className="grid max-w-81.5">
+
+                        <label className="text-label-c ml-1 mt-2.5">Birthday</label>
+
+                        <div className="flex gap-4.5">
+                            <div className="grid">
+                                <select className="bg-input-c w-18.5 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
+                                    {...register("birthday.day")}>
+                                    <option value="">Day</option>
+
+                                    {days.map((day) => (
+                                        <option key={day} value={day}>{day}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="grid">
+                                <select className="bg-input-c w-35 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
+                                    {...register("birthday.month", { valueAsNumber: true })}>
+                                    <option value="">Month</option>
+
+                                    {months.map((month, index) => (
+                                        <option key={month} value={index}>{month}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="grid">
+                                <select className="bg-input-c w-20 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
+                                    {...register("birthday.year")}>
+                                    <option value="">Year</option>
+
+                                    {years.map((year) => (
+                                        <option key={year} value={year}>{year}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="grid mt-2.5 w-81.5">
-                        <label htmlFor="birthday">Birthday</label>
-                        <input
-                            className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 pr-4 outline-none transition-all text-gray-400 hover:bg-gray-500 hover:text-gray-300
-                                ${errors.birthday && "outline outline-red-600"}`}
-                            id="birthday"
-                            type="date"
-                            autoComplete="bday-day"
-                            {...register('birthday', { required: true })}
-                        />
-                        {errors.birthday && <span className="text-red-600 text-error-t max-w-81.5">
-                            * You must enter your birthday.</span>}
-                    </div>
+                    <Input
+                        label="E-mail"
+                        id="email"
+                        type="email"
+                        placeholder="E-mail"
+                        autoComplete="email"
+                        error={!!errors.email}
+                        errorMessage="* You must enter your e-mail adress."
+                        register={register("email", { required: true })}
+                    />
 
-                    <div className="grid mt-2.5 w-81.5">
-                        <label htmlFor="email">E-mail</label>
-                        <input
-                            className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
-                                ${errors.email && "outline outline-red-600"}`}
-                            id="email"
-                            type="email"
-                            placeholder="E-mail"
-                            autoComplete="email"
-                            {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
-                        />
-                        {errors.email && <span className="text-red-600 text-error-t max-w-81.5">
-                            * You must enter your e-mail adress.</span>}
-                    </div>
-
-                    <div className="grid mt-2.5 w-81.5">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            className={`bg-gray-600 w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
-                                ${errors.password && "outline outline-red-600"}`}
-                            id="password"
-                            type="password"
-                            placeholder="Password"
-                            autoComplete="password"
-                            minLength={6}
-                            {...register('password', { required: true, minLength: 6 })}
-                        />
-                        {errors.password?.type === "required" &&
-                            <span className="text-red-600 text-error-t max-w-81.5">
-                                * You must enter your password.</span>
+                    <Input
+                        label="Password"
+                        id="password"
+                        type="password"
+                        placeholder="Password"
+                        autoComplete="current-password"
+                        minLength={6}
+                        error={!!errors.password}
+                        errorMessage={
+                            errors.password?.type === "required"
+                                ? "* You must enter your password."
+                                : errors.password?.type === "minLength"
+                                    ? "* Your password must be 6 characters or more."
+                                    : undefined
                         }
-                        {errors.password?.type === "minLength" &&
-                            <span className="text-red-600 text-error-t max-w-81.5">
-                                Your password must be 6 characteres or more.</span>
-                        }
-                    </div>
+                        register={register("password", {
+                            required: true,
+                            minLength: 6,
+                        })}
+                    />
 
                     <button
-                        className="bg-blue-600 w-81.5 h-12.5 rounded-lg mt-5 mb-5 hover:bg-blue-500"
+                        className="bg-button-c w-81.5 h-12.5 rounded-lg mt-5 hover:bg-blue-500"
                         type="submit">Create Account</button>
 
-                    <div className="flex items-start gap-2">
+                    <div className="flex items-start gap-2 mt-5 max-w-81.5">
                         <input
                             id="is-accepted"
                             type="checkbox"
-                            className="mt-1 accent-blue-500 cursor-pointer"
+                            className="mt-1 accent-[#9696cd] outline-none cursor-pointer"
                             {...register('isAccepted', { required: true })}
                         />
                         <div className="grid gap-1">
                             <label
-                                className="text-error-t max-w-81.5 leading-tight hover:underline"
+                                className="text-[14px] text-[#9a9aad] max-w-81.5 leading-tight hover:underline"
                                 htmlFor="is-accepted">
                                 By creating an account you have to agree with our terms & conditions.
                             </label>
                             {errors.isAccepted &&
-                                <span className="text-red-600 text-error-t">
+                                <span className="text-error-c">
                                     * You must accept the terms before signing up.</span>}
                         </div>
                     </div>
@@ -147,8 +208,8 @@ export default function Signup() {
 
                 </form>
 
-                <div>
-                    <Link href='/Login' className="text-error-t mt-4">Already have an account? <span className="text-blue-600 hover:underline hover:text-blue-500">Log in</span></Link>
+                <div className="mt-5">
+                    <Link href='/Login' className="text-error-t text-[#9a9aad] text-[14px]">Already have an account? <span className="text-blue-600 hover:underline hover:text-blue-500">Log in</span></Link>
                 </div>
             </div>
         </div>

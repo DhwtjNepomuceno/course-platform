@@ -44,8 +44,8 @@ export default function ForgotPassword() {
                         <div className="grid mt-9 w-81.5">
                             <h1 className="text-[15px] text-center">A Link was sent to your e-mail. If you can&apos;t find it, check on spam</h1>
                             <button
-                                className="bg-blue-600 w-81.5 h-12.5 rounded-lg mt-5 mb-1 hover:bg-blue-500"
-                                type="submit">Back to Login
+                                className="bg-button-c w-81.5 h-12.5 rounded-xl mt-5 mb-1 hover:bg-button-hover-c"
+                                type="button" onClick={() => router.push("/Login")}>Back to Login
                             </button>
                         </div>
                     </div>
@@ -56,7 +56,7 @@ export default function ForgotPassword() {
                             <div className="grid mt-2.5 w-81.5">
                                 <label htmlFor="email">Your E-mail</label>
                                 <input
-                                    className={`bg-input-c w-81.5 h-12.5 rounded-lg pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
+                                    className={`bg-input-c w-81.5 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-gray-500 hover:placeholder:text-gray-300
                             ${errors.email && "outline outline-error-c"}`}
                                     id="email"
                                     type="email"
@@ -69,7 +69,7 @@ export default function ForgotPassword() {
                             </div>
 
                             <button
-                                className="bg-blue-600 w-81.5 h-12.5 rounded-lg mt-5 mb-1 hover:bg-blue-500"
+                                className="bg-button-c w-81.5 h-12.5 rounded-xl mt-5 mb-1 hover:bg-button-hover-c"
                                 type="submit">Next
                             </button>
                         </form>

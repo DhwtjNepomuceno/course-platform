@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
+import { sendResetMail } from "@/lib/mailer";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -26,6 +27,8 @@ export async function POST(req: NextRequest) {
   const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET!, {
     expiresIn: "1d",
   });
+
+  await sendResetMail(user.email);
 
   const response = NextResponse.json({
     message: "Sending link to your E-mail.",
