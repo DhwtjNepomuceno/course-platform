@@ -1,4 +1,4 @@
-export default function Button({ children, type, action }: { children: string, type: "submit" | "button", action?: () => void }) {
+export default function CustomButton({ children, type, action }: { children: string, type: "submit" | "button", action?: () => void }) {
 
     return (
         <button

@@ -5,33 +5,12 @@ import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { handleSubmitFn } from "./handleSubmit";
 
 export default function ForgotPassword() {
     const { register, handleSubmit, formState: { errors } } = useForm<ForgotPasswordForm>()
     const router = useRouter();
     const [submitted, setSubmitted] = useState(false);
-
-    async function handleSubmitFn(data: ForgotPasswordForm) {
-        try {
-            const response = await fetch("api/Auth/ForgotPassword", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            })
-
-            const result = await response.json()
-
-            if (result) {
-                setSubmitted(true);
-            }
-
-            console.log(result)
-        } catch (error) {
-            console.error(error)
-        }
-    }
 
     return (
         <div className="grid place-items-center mt-12">
@@ -51,7 +30,7 @@ export default function ForgotPassword() {
                     </div>
                 ) : (
                     <div className="justify-items-center">
-                        <form onSubmit={handleSubmit(handleSubmitFn)}>
+                        <form onSubmit={handleSubmit((data) => handleSubmitFn(data, setSubmitted))}>
 
                             <div className="grid mt-2.5 w-81.5">
                                 <label htmlFor="email">Your E-mail</label>

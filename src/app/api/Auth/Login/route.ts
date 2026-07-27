@@ -8,8 +8,7 @@ export async function POST(req: NextRequest) {
 
   if (!body) {
     return NextResponse.json(
-      { error: "Failed to login: no data" },
-      { status: 400 },
+      { error: "Failed to login: no data", status: 400}
     );
   }
 
@@ -40,7 +39,7 @@ export async function POST(req: NextRequest) {
 
 
   const response = NextResponse.json({
-    message: "Login bem-sucedido",
+    message: "Loged-in successfully.",
     data: {
       token,
       user: {

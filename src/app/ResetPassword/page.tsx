@@ -5,9 +5,8 @@ import Button from "@/components/Button"
 import { useForm } from "react-hook-form"
 import { ResetPasswordForm } from "@/utils"
 import { useSearchParams } from "next/navigation"
-import { ApiResponseData, ApiResponseError } from "@/interfaces/api"
-import { AuthPayload } from "@/interfaces/user"
 import { useWatch } from "react-hook-form";
+import { handleSubmitFn } from "./handleSubmit"
 
 export default function ResetPassword() {
 
@@ -19,31 +18,6 @@ export default function ResetPassword() {
     const expirationLink = searchParams.get("expiration");
     const expiration = expirationLink ? atob(expirationLink) : null
     console.log(expiration, now);
-
-    async function handleSubmitFn(data: ResetPasswordForm) {
-        try {
-
-            if (Date.now() > expiration) {
-                throw new Error("Expired link. Request for a new reset link.")
-            }
-
-            const response = await fetch("/api/Auth/ResetPassword", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            })
-            const result: ApiResponseData<AuthPayload> | ApiResponseError = await response.json()
-
-            if (!result.successed || !("data" in result)) {
-                throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
-            }
-
-        } catch (error) {
-            alert(error)
-        }
-    }
 
     return (
         <div className="grid place-items-center mt-12">
@@ -96,7 +70,7 @@ export default function ResetPassword() {
                             validate: (value) => value === newPassword || "The passwords doesn't match.",
                         })}
                     />
-                    <Button type="submit">Back to Login</Button>
+                    <Button type="submit">Update password</Button>
                 </form>
 
             </div>

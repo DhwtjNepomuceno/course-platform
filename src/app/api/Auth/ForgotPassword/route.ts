@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET!, {
-    expiresIn: "1d",
+    expiresIn: "5m",
   });
 
   await sendResetMail(user.email);

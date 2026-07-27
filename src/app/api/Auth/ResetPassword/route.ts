@@ -1,8 +1,49 @@
-import { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
+import bcrypt from "bcrypt";
+import { NextRequest, NextResponse } from "next/server";
 
-export default function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
 
-    //1. add no envio de email o email do usuario junto do tempo de expiracao
-    //2. criar rota (com validacao de se existe e tals) de resetpassword recebendo o email e a nova senha
-    //3.d
+    if (!body.password) {
+      return NextResponse.json(
+        {error: "Missing data."},
+        { status: 400 }
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {email: body.email},
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Account not found." },
+        { status: 404 }
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(body.password, 10);
+
+    await prisma.user.update({
+      where: { email: body.email },
+      data: { password: hashedPassword },
+    });
+
+    return NextResponse.json(
+      {
+        message: "Password changed successfully.",
+        successed: true,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { error: "Unexpected error." },
+      { status: 500 }
+    );
+  }
 }

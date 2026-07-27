@@ -1,82 +1,24 @@
 "use client";
 
-import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { SignupForm, SignupRequest } from "@/utils";
+import { SignupForm } from "@/utils";
 import { useRouter } from "next/navigation";
-import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
-import { AuthPayload } from "@/interfaces/user";
-import { login, useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
 import Input from "@/components/Input";
+import { handleSubmitFn } from "./handleSubmit";
+import { days, months, years } from "./birthdayArrays";
+import Button from "@/components/Button";
+import CustomLink from '../../components/Link/index';
 
 export default function Signup() {
     const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>();
     const router = useRouter();
     const { token, setToken, setUser } = useAuth();
 
-    const days = Array.from(
-        { length: 31 },
-        (_, index) => index + 1
-    );
-
-    const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-    ]
-
-    const years = Array.from(
-        { length: 2010 - 1920 + 1 },
-        (_, index) => index + 1920
-    );
-
     useEffect(() => {
         if (token) router.replace("/Home")
     }, [router, token])
-
-    async function handleSubmitFn(data: SignupForm) {
-        try {
-            const request: SignupRequest = {
-                name: `${data.fullName.name} ${data.fullName.surname}`,
-                email: data.email,
-                birthday: data.birthday.day + data.birthday.month + data.birthday.year,
-                password: data.password,
-            };
-
-            const response = await fetch("/api/Auth/Signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(request)
-            })
-            const result: ApiResponseData<AuthPayload> | ApiResponseError = await response.json()
-
-            if (!result.successed || !("data" in result)) {
-                throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
-            }
-
-            const { token, user } = result.data;
-
-            login(token, user);
-            setToken(token);
-            setUser(user);
-            router.replace("/Home")
-        } catch (error) {
-            alert(error)
-            console.error(error)
-        }
-    }
 
     return (
         <div className="grid place-items-center mt-12">
@@ -84,14 +26,14 @@ export default function Signup() {
             <p className="text-center text-subtitle-c text-subtitle-t">Enter your details below & free sign up</p>
 
             <div className=" min-w-screen min-h-screen bg-surface-c rounded-2xl mt-3 justify-items-center">
-                <form onSubmit={handleSubmit(handleSubmitFn)}>
+                <form onSubmit={handleSubmit((data) => handleSubmitFn(data, setToken, setUser, router))}>
 
                     <Input
                         label="Your First Name"
                         id="name"
                         type="text"
                         placeholder="Name"
-                        autoComplete="name"
+                        autoComplete="given-name"
                         minLength={6}
                         error={!!errors.fullName?.name}
                         errorMessage="* You must enter your name."
@@ -103,7 +45,7 @@ export default function Signup() {
                         id="surname"
                         type="text"
                         placeholder="Surname"
-                        autoComplete="name"
+                        autoComplete="family-name"
                         minLength={6}
                         error={!!errors.fullName?.surname}
                         errorMessage="* You must enter your last name."
@@ -181,9 +123,7 @@ export default function Signup() {
                         })}
                     />
 
-                    <button
-                        className="bg-button-c w-81.5 h-12.5 rounded-lg mt-5 hover:bg-blue-500"
-                        type="submit">Create Account</button>
+                    <Button type="submit">Create Account</Button>
 
                     <div className="flex items-start gap-2 mt-5 max-w-81.5">
                         <input
@@ -208,9 +148,8 @@ export default function Signup() {
 
                 </form>
 
-                <div className="mt-5">
-                    <Link href='/Login' className="text-error-t text-[#9a9aad] text-[14px]">Already have an account? <span className="text-blue-600 hover:underline hover:text-blue-500">Log in</span></Link>
-                </div>
+                <CustomLink href="/Login" span="Log in">Already have an account? </CustomLink>
+
             </div>
         </div>
     );

@@ -12,7 +12,7 @@ type InputProps = {
     register: UseFormRegisterReturn;
 }
 
-export default function Input(
+export default function CustomInput(
     {
         label,
         id,

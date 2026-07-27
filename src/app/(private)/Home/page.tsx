@@ -9,7 +9,7 @@ export default function HomePage() {
 
       <header className="bg-blue-500 px-8 pt-14 pb-10">
         <h1 className="text-4xl font-bold text-white">
-          {user ? `Bem-vinde, ${user.name}` : "Bem-vinde a aule" }
+          {user ? `Welcome, ${user.name}!` : "Welcome to class!" }
         </h1>
 
         <p className="mt-2 text-lg text-blue-100">
