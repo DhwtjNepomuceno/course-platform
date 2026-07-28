@@ -4,12 +4,13 @@ import { useForm } from "react-hook-form";
 import { LoginForm } from "@/utils";
 import { useRouter } from "next/navigation";
 import { login, useAuth } from "@/context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 import { AuthPayload } from "@/interfaces/user";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>()
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { token, setToken, setUser } = useAuth();
   useEffect(() => {
@@ -17,30 +18,36 @@ export default function Login() {
   }, [router, token])
 
   async function handleSubmitFn(data: LoginForm) {
+    setLoading(true);
     try {
-      const response = await fetch("/api/Auth/Login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
-      const result: ApiResponseData<AuthPayload> | ApiResponseError = await response.json()
 
-      if (!result.successed || !("data" in result)) {
-        throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
-      }
+      setTimeout(() => {
+        const response = fetch("/api/Auth/Login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        })
+        const result: ApiResponseData<AuthPayload> | ApiResponseError = response.json()
 
-      const { token, user } = result.data;
+        if (!result.successed || !("data" in result)) {
+          throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
+        }
 
-      login(token, user);
-      setToken(token);
-      setUser(user);
-      router.replace("/Home")
+        const { token, user } = result.data;
+
+        login(token, user);
+        setToken(token);
+        setUser(user);
+        router.replace("/Home")
+      }, 1000)
 
     } catch (error) {
       alert(error)
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -92,11 +99,11 @@ export default function Login() {
           </div>
 
           <button
-            className="bg-button-c w-81.5 h-12.5 rounded-xl mt-5 mb-1 hover:bg-button-hover-c"
-            type="submit">Log in</button>
+            className="bg-button-c w-81.5 h-12.5 rounded-xl mt-5 mb-1 hover:bg-button-hover-c disabled:bg-red-600"
+            type="submit" disabled={loading}>Log in</button>
 
         </form>
-        
+
         <div>
           <Link href='/Signup' className="text-[14px] text-gray-400 mt-4">Doesn&apos;t have an account?
             <span className="text-[#5d76f7] hover:underline hover:text-[#9aa7e9]"> Sign Up</span></Link>

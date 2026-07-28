@@ -6,7 +6,9 @@ export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
 
-    if (!body.password) {
+    console.log(body);
+
+    if (!body.password || !body.email) {
       return NextResponse.json(
         {error: "Missing data."},
         { status: 400 }

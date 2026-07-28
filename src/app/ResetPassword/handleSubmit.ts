@@ -1,12 +1,16 @@
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 import { AuthPayload } from "@/interfaces/user";
-import { ResetPasswordForm } from "@/utils";
 
-export async function handleSubmitFn(data: ResetPasswordForm, expiration: number) {
+export async function handleSubmitFn(password: string, email: string, expiration: string) {
         try {
+            const now = Date.now();
 
-            if (Date.now() > expiration) {
-                throw new Error("Expired link. Request for a new reset link.")
+            if(now > Number(expiration)){
+                alert("The link has expired. Try again")
+            } 
+
+            if(!password || !email) {
+                return alert("Missing data")
             }
 
             const response = await fetch("/api/Auth/ResetPassword", {
@@ -14,11 +18,14 @@ export async function handleSubmitFn(data: ResetPasswordForm, expiration: number
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    email,
+                    password,
+                })
             })
             const result: ApiResponseData<AuthPayload> | ApiResponseError = await response.json()
 
-            if (!result.successed || !("data" in result)) {
+            if (!result.successed) {
                 throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
             }
 

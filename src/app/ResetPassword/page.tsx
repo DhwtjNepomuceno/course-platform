@@ -13,11 +13,10 @@ export default function ResetPassword() {
     const { register, handleSubmit, control, formState: { errors } } = useForm<ResetPasswordForm>();
 
     const newPassword = useWatch({ control, name: "newPassword" })
-    const now = Date.now();
     const searchParams = useSearchParams();
     const expirationLink = searchParams.get("expiration");
-    const expiration = expirationLink ? atob(expirationLink) : null
-    console.log(expiration, now);
+    const email = searchParams.get("email")!;
+    const expiration = atob(expirationLink!)
 
     return (
         <div className="grid place-items-center mt-12">
@@ -25,7 +24,7 @@ export default function ResetPassword() {
 
 
             <div className="min-w-screen min-h-screen bg-surface-c rounded-2xl mt-3 justify-items-center">
-                <form onSubmit={handleSubmit(handleSubmitFn)}>
+                <form onSubmit={handleSubmit((data) => handleSubmitFn(data.newPassword, email, expiration))}>
                     <Input
                         label="Enter you new password"
                         id="password"

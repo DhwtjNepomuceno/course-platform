@@ -46,7 +46,7 @@ export async function sendResetMail(to: string) {
 
   console.log(process.env.URL_WEB);
 
-  const link = `${process.env.URL_WEB}?expiration=${btoa((expiration + (5 * 60 * 1000)).toString())}`;
+  const link = `${process.env.URL_WEB}?expiration=${btoa((expiration + (5 * 60 * 1000)).toString())}&email=${to}`;
 
   await sendMail({
     to,
