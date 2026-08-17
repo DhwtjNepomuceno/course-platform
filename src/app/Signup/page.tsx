@@ -10,6 +10,8 @@ import { handleSubmitFn } from "./handleSubmit";
 import { days, months, years } from "./birthdayArrays";
 import Button from "@/components/Button";
 import CustomLink from '../../components/Link/index';
+import CustomInputMT8 from "@/components/InputMT-8";
+import CustomInputMT2 from "@/components/InputMT-2.5";
 
 export default function Signup() {
     const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>();
@@ -21,14 +23,14 @@ export default function Signup() {
     }, [router, token])
 
     return (
-        <div className="grid place-items-center mt-12">
+        <div className="grid place-items-center mt-[44px]">
             <h1 className="text-title-t">Sign Up</h1>
             <p className="text-center text-subtitle-c text-subtitle-t">Enter your details below & free sign up</p>
 
-            <div className=" min-w-screen min-h-screen bg-surface-c rounded-2xl mt-3 justify-items-center">
+            <div className=" min-w-screen min-h-screen bg-surface-c rounded-2xl mt-[44px] justify-items-center">
                 <form onSubmit={handleSubmit((data) => handleSubmitFn(data, setToken, setUser, router))}>
 
-                    <Input
+                    <CustomInputMT8
                         label="Your First Name"
                         id="name"
                         type="text"
@@ -40,7 +42,7 @@ export default function Signup() {
                         register={register("fullName.name", { required: true })}
                     />
 
-                    <Input
+                    <CustomInputMT2
                         label="Your Last Name"
                         id="surname"
                         type="text"
@@ -52,13 +54,13 @@ export default function Signup() {
                         register={register("fullName.surname", { required: true })}
                     />
 
-                    <div className="grid max-w-81.5">
+                    <div className="grid max-w-86">
 
                         <label className="text-label-c ml-1 mt-2.5">Birthday</label>
 
                         <div className="flex gap-4.5">
                             <div className="grid">
-                                <select className="bg-input-c w-18.5 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
+                                <select className="bg-input-c w-19.5 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
                                     {...register("birthday.day")}>
                                     <option value="">Day</option>
 
@@ -69,7 +71,7 @@ export default function Signup() {
                             </div>
 
                             <div className="grid">
-                                <select className="bg-input-c w-35 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
+                                <select className="bg-input-c w-36 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
                                     {...register("birthday.month", { valueAsNumber: true })}>
                                     <option value="">Month</option>
 
@@ -79,7 +81,7 @@ export default function Signup() {
                                 </select>
                             </div>
                             <div className="grid">
-                                <select className="bg-input-c w-20 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
+                                <select className="bg-input-c w-21 h-10 rounded-xl text-center text-[#a4a3ad] text-subtitle-t outline-none"
                                     {...register("birthday.year")}>
                                     <option value="">Year</option>
 
@@ -91,7 +93,7 @@ export default function Signup() {
                         </div>
                     </div>
 
-                    <Input
+                    <CustomInputMT2
                         label="E-mail"
                         id="email"
                         type="email"
@@ -102,7 +104,7 @@ export default function Signup() {
                         register={register("email", { required: true })}
                     />
 
-                    <Input
+                    <CustomInputMT2
                         label="Password"
                         id="password"
                         type="password"

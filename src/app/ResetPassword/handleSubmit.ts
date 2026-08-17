@@ -1,7 +1,7 @@
 import { ApiResponseData, ApiResponseError } from "@/interfaces/api";
 import { AuthPayload } from "@/interfaces/user";
 
-export async function handleSubmitFn(password: string, email: string, expiration: string) {
+export async function handleSubmitFn(password: string, email: string, expiration: string, setSubmitted: React.Dispatch<React.SetStateAction<boolean>>) {
         try {
             const now = Date.now();
 
@@ -27,6 +27,10 @@ export async function handleSubmitFn(password: string, email: string, expiration
 
             if (!result.successed) {
                 throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
+            }
+
+            if (result) {
+                setSubmitted(true);
             }
 
         } catch (error) {

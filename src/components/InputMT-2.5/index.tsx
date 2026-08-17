@@ -12,7 +12,7 @@ type InputProps = {
     register: UseFormRegisterReturn;
 }
 
-export default function CustomInput(
+export default function CustomInputMT2(
     {
         label,
         id,
@@ -25,10 +25,10 @@ export default function CustomInput(
         register }: InputProps) {
 
     return (
-        <div className="grid mt-2.5 w-81.5">
+        <div className="grid mt-2.5 w-86">
             <label className="text-label-c ml-1" htmlFor={id}>{label}</label>
             <input
-                className={`bg-input-c w-81.5 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-input-hover-c hover:placeholder:text-placeholder-hover-c
+                className={`bg-input-c w-86 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-input-hover-c hover:placeholder:text-placeholder-hover-c
                 ${error && "outline outline-error-c"}`}
                 id={id}
                 type={type}

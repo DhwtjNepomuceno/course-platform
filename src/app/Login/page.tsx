@@ -18,30 +18,28 @@ export default function Login() {
   }, [router, token])
 
   async function handleSubmitFn(data: LoginForm) {
-    setLoading(true);
     try {
+      setLoading(true);
 
-      setTimeout(() => {
-        const response = fetch("/api/Auth/Login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        })
-        const result: ApiResponseData<AuthPayload> | ApiResponseError = response.json()
+      const response = await fetch("/api/Auth/Login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      const result: ApiResponseData<AuthPayload> | ApiResponseError = await response.json()
 
-        if (!result.successed || !("data" in result)) {
-          throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
-        }
+      if (!result.successed || !("data" in result)) {
+        throw new Error("error" in result ? result.error : "Unexpected error, try again later.");
+      }
 
-        const { token, user } = result.data;
+      const { token, user } = result.data;
 
-        login(token, user);
-        setToken(token);
-        setUser(user);
-        router.replace("/Home")
-      }, 1000)
+      login(token, user);
+      setToken(token);
+      setUser(user);
+      router.replace("/Home")
 
     } catch (error) {
       alert(error)
@@ -52,16 +50,17 @@ export default function Login() {
   }
 
   return (
-    <div className="grid place-items-center mt-12">
-      <h1 className="text-title-t">Log In</h1>
+    <div className="grid place-items-center mt-[44px]">
+      <h1 className="text-title-t">Login</h1>
+      <p className="text-center text-subtitle-c text-subtitle-t">Insert your email and password to log in.</p>
 
-      <div className="min-w-screen min-h-screen bg-surface-c rounded-2xl mt-3 justify-items-center">
+      <div className="min-w-screen min-h-screen mt-[44px] bg-surface-c rounded-2xl justify-items-center">
         <form onSubmit={handleSubmit(handleSubmitFn)}>
 
-          <div className="grid mt-2.5 w-81.5">
+          <div className="grid mt-2.5 w-86">
             <label className="text-label-c ml-1" htmlFor="email">Your E-mail</label>
             <input
-              className={`bg-input-c w-81.5 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-input-hover-c hover:placeholder:text-placeholder-hover-c
+              className={`bg-input-c w-86 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-input-hover-c hover:placeholder:text-placeholder-hover-c
                 ${errors.email && "outline outline-red-600"}`}
               id="email"
               type="email"
@@ -73,10 +72,10 @@ export default function Login() {
               * You must enter your e-mail adress.</span>}
           </div>
 
-          <div className="grid mt-2.5 w-81.5">
+          <div className="grid mt-2.5 w-86">
             <label className="text-label-c text-label-t ml-1" htmlFor="password">Password</label>
             <input
-              className={`bg-input-c w-81.5 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-input-hover-c hover:placeholder:text-placeholder-hover-c
+              className={`bg-input-c w-86 h-12.5 rounded-2xl pl-4 outline-none transition-all hover:bg-input-hover-c hover:placeholder:text-placeholder-hover-c
                 ${errors.password && "outline outline-red-600"}`}
               id="password"
               type="password"
@@ -99,7 +98,7 @@ export default function Login() {
           </div>
 
           <button
-            className="bg-button-c w-81.5 h-12.5 rounded-xl mt-5 mb-1 hover:bg-button-hover-c disabled:bg-red-600"
+            className="bg-button-c w-86 h-12.5 rounded-xl mt-5 mb-1 hover:bg-button-hover-c"
             type="submit" disabled={loading}>Log in</button>
 
         </form>
