@@ -6,14 +6,15 @@ import { ResetPasswordForm } from "@/utils"
 import { useSearchParams } from "next/navigation"
 import { useWatch } from "react-hook-form";
 import { handleSubmitFn } from "./handleSubmit"
-import CustomInputMT8 from "@/components/InputMT-8"
-import CustomInputMT2 from "@/components/InputMT-2.5"
 import { useState } from "react"
+import CustomInputMT8 from "@/components/Input"
+import CustomInputMT2 from "@/components/InputMT-2.5"
 
 export default function ResetPassword() {
 
     const { register, handleSubmit, control, formState: { errors } } = useForm<ResetPasswordForm>();
     const [submitted, setSubmitted] = useState(false);
+    const [hasAlert, setHasAlert] = useState<string | null>(null);
 
     const newPassword = useWatch({ control, name: "newPassword" })
     const searchParams = useSearchParams();
@@ -51,7 +52,15 @@ export default function ResetPassword() {
                 <div className="grid place-items-center">
                     <p className="text-center text-subtitle-c text-subtitle-t">Reset your password by entering the new one twice.</p>
                     <div className="min-w-screen min-h-screen bg-surface-c rounded-2xl mt-[44px] justify-items-center">
-                        <form onSubmit={handleSubmit((data) => handleSubmitFn(data.newPassword, email, expiration, setSubmitted))}>
+                        <form onSubmit={handleSubmit(async (data) => {
+                            const response = await handleSubmitFn(data.newPassword, email, expiration, setSubmitted)
+                            if (response?.error) {
+                                setHasAlert(response.message);
+                                console.log(response.message)
+                            }
+                            return response;
+                        }
+                        )}>
                             <CustomInputMT8
                                 label="Enter you new password"
                                 id="password"
@@ -101,7 +110,13 @@ export default function ResetPassword() {
                     </div>
                 </div>
             )}
+            {
+                hasAlert && <dialog open className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-c rounded-xl p-6 shadow-lg text-center">
+                    <p className="text-sm text-subtitle-t text-white">{hasAlert}</p>
+                </dialog>
+            }
         </div>
 
     )
+
 }

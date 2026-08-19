@@ -6,11 +6,11 @@ export async function handleSubmitFn(password: string, email: string, expiration
             const now = Date.now();
 
             if(now > Number(expiration)){
-                alert("The link has expired. Try again")
+                return {message: "The link has expired. Try again", error: true}
             } 
 
             if(!password || !email) {
-                return alert("Missing data")
+                return {message: "Missing data", error: true}
             }
 
             const response = await fetch("/api/Auth/ResetPassword", {
